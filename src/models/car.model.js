@@ -33,13 +33,20 @@ const carSchema = new Schema({
     type: Number,
     require: true,
   },
-  price: {
+  sellingPrice: {
     type: Number,
     require: true,
   },
   owner: {
     type: ObjectId,
     ref: "users",
+  },
+  serviceType: {
+    type: String,
+    enum: ["RENTAL", "SELL"],
+  },
+  rentPerHour: {
+    type: Number,
   },
 });
 
