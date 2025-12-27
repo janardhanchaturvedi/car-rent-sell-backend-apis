@@ -14,3 +14,5 @@ connectDB()
   .catch((error) => {
     console.error("-------error in connecting DB", error);
   });
+
+app.use(express.json());
