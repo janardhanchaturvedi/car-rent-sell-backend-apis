@@ -1,7 +1,7 @@
 const express = require("express");
 const connectDB = require("./db/dbConnection");
 require("dotenv").config();
-const ROUTER = require("./routes");
+const ROUTES = require("./routes");
 
 const app = express();
 const PORT = process.env.PORT;
@@ -18,4 +18,4 @@ connectDB()
 
 app.use(express.json());
 
-app.use("/role", ROUTER.ROLE);
+app.use("/role", ROUTES.ROLE);

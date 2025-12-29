@@ -29,4 +29,8 @@ router.post("/add", (req, res, next) => {
  * ROLE DELETE
  */
 
+router.delete("/" , () => {
+  
+})
+
 module.exports = router;
