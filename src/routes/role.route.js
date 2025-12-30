@@ -1,13 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const DB = require("./../models");
+const auth = require("./../middleware/authentication");
+const { ROLES } = require("./../utils/constants/enums");
 /**
  * ROLE ADD
  * role/add
  * POST
  */
 
-router.post("/add", (req, res, next) => {
+router.post("/add", auth(true, [ROLES.ADMIN]), (req, res, next) => {
   const { roleName } = req.body;
   const response = DB.ROLE.create({
     role: roleName,
@@ -29,8 +31,6 @@ router.post("/add", (req, res, next) => {
  * ROLE DELETE
  */
 
-router.delete("/" , () => {
-  
-})
+router.delete("/", () => {});
 
 module.exports = router;
