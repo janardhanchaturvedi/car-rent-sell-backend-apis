@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const DB = require("./../models");
+const CONTROLLERS = require("./../controllers");
 const auth = require("./../middleware/authentication");
 const { ROLES } = require("./../utils/constants/enums");
 /**
@@ -9,16 +9,11 @@ const { ROLES } = require("./../utils/constants/enums");
  * POST
  */
 
-router.post("/add", auth(true, [ROLES.ADMIN]), (req, res, next) => {
-  const { roleName } = req.body;
-  const response = DB.ROLE.create({
-    role: roleName,
-  });
-  return res.status(201).json({
-    message: "Role Created Successfully",
-    data: response,
-  });
-});
+router.post(
+  "/add",
+  auth(true, [ROLES.ADMIN]),
+  CONTROLLERS.ROLE.addRoleController
+);
 /**
  * ROLE GET
  */

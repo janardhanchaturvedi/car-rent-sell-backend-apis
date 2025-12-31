@@ -20,3 +20,4 @@ app.use(express.json());
 
 app.use("/role", ROUTES.ROLE);
 app.use("/user", ROUTES.USER);
+app.use("/car", ROUTES.CAR);
