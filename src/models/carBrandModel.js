@@ -9,6 +9,9 @@ const carSchema = new Schema(
       required: true,
       trim: true,
     },
+    logo: {
+      type: String,
+    },
     isActive: {
       type: Boolean,
       default: true,
