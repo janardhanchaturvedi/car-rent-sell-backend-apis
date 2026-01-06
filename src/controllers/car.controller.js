@@ -1,4 +1,5 @@
-const DB = require;
+const DB = require("../models");
+const { uploadOnCloudinary } = require("../utils/cloudinary");
 
 const addCarController = async (req, res) => {
   try {
@@ -15,6 +16,15 @@ const addCarController = async (req, res) => {
       serviceType,
       rentPerHour,
     } = req.body;
+    const carImageFilePath = req.file.path;
+    console.log("res", req.body, req.file);
+    const carImageURL = await uploadOnCloudinary(carImageFilePath);
+    console.log("carImageURL", carImageURL);
+    if (!carImageURL?.url) {
+      return res.status(500).json({
+        message: "Image Upload Failed",
+      });
+    }
     const car = await DB.CAR.create({
       name,
       brandName,
@@ -27,6 +37,7 @@ const addCarController = async (req, res) => {
       owner,
       serviceType,
       rentPerHour,
+      carImage: carImageURL.url,
     });
     res.status(201).json({
       message: "Car added successfully",

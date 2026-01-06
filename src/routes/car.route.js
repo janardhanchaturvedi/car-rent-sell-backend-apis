@@ -2,13 +2,14 @@ const express = require("express");
 const router = express.Router();
 const DB = require("../models");
 const CONTROLLER = require("../controllers");
+const { upload } = require("../middleware/mutler");
 const app = express();
 app.use(express.json());
 /**
  * /cars
  * POST
  */
-router.post("/", CONTROLLER.CAR.addCarController);
+router.post("/", upload.single("carImage"), CONTROLLER.CAR.addCarController);
 
 /**
  * /cars

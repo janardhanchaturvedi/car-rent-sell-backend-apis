@@ -5,14 +5,18 @@ const ObjectId = mongoose.Schema.ObjectId;
 const carSchema = new Schema({
   name: {
     type: String,
-    require: true,
+    required: true,
     trim: true,
   },
   brandName: {
     type: ObjectId,
-    require: true,
+    // required: true,
     trim: true,
     ref: "brands",
+  },
+  carImage: {
+    type: String,
+    required: true,
   },
   carType: {
     type: String,
@@ -31,11 +35,11 @@ const carSchema = new Schema({
   },
   capicity: {
     type: Number,
-    require: true,
+    // required: true,
   },
   sellingPrice: {
     type: Number,
-    require: true,
+    // required: true,
   },
   owner: {
     type: ObjectId,
