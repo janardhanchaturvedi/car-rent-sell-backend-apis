@@ -16,15 +16,25 @@ const addCarController = async (req, res) => {
       serviceType,
       rentPerHour,
     } = req.body;
-    const carImageFilePath = req.file.path;
-    console.log("res", req.body, req.file);
-    const carImageURL = await uploadOnCloudinary(carImageFilePath);
-    console.log("carImageURL", carImageURL);
-    if (!carImageURL?.url) {
-      return res.status(500).json({
-        message: "Image Upload Failed",
-      });
-    }
+    const carImageFilePath = req?.file?.path;
+    console.log("res", req.body, req.file, req.files);
+    const filesToUploadOnCloudinary = req.files;
+    const imageUrl = await filesToUploadOnCloudinary.map(async (file) => {
+      const carImageURL = await uploadOnCloudinary(file.path);
+      return carImageURL;
+    });
+    const results = await Promise.all(imageUrl);
+    const urls = results.map((result) => result?.url);
+
+    console.log(urls);
+    //Assignment Mutliples Upload Cloudinary
+    //Store Database array
+    // const carImageURL = await uploadOnCloudinary(carImageFilePath);
+    // if (!carImageURL?.url) {
+    //   return res.status(500).json({
+    //     message: "Image Upload Failed",
+    //   });
+    // }
     const car = await DB.CAR.create({
       name,
       brandName,
@@ -37,7 +47,7 @@ const addCarController = async (req, res) => {
       owner,
       serviceType,
       rentPerHour,
-      carImage: carImageURL.url,
+      // carImage: carImageURL.url,
     });
     res.status(201).json({
       message: "Car added successfully",
