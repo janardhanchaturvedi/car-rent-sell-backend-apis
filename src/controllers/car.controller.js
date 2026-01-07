@@ -16,25 +16,31 @@ const addCarController = async (req, res) => {
       serviceType,
       rentPerHour,
     } = req.body;
-    const carImageFilePath = req?.file?.path;
-    console.log("res", req.body, req.file, req.files);
-    const filesToUploadOnCloudinary = req.files;
-    const imageUrl = await filesToUploadOnCloudinary.map(async (file) => {
-      const carImageURL = await uploadOnCloudinary(file.path);
-      return carImageURL;
+    const coverImage = req.files.coverImage;
+    const galleryImage = req.files.gallery;
+    console.log(
+      "coverImage \n",
+      coverImage,
+      "galleryImage-------------------- \n ",
+      galleryImage
+    );
+    const coverImagePromise = await coverImage.map((item) => {
+      return uploadOnCloudinary(item.path);
     });
-    const results = await Promise.all(imageUrl);
-    const urls = results.map((result) => result?.url);
+    const coverImageData = await Promise.all(coverImagePromise);
 
-    console.log(urls);
-    //Assignment Mutliples Upload Cloudinary
-    //Store Database array
-    // const carImageURL = await uploadOnCloudinary(carImageFilePath);
-    // if (!carImageURL?.url) {
-    //   return res.status(500).json({
-    //     message: "Image Upload Failed",
-    //   });
-    // }
+    const galleryImagePromise = await galleryImage.map((item) => {
+      return uploadOnCloudinary(item.path);
+    });
+
+    const galleryImageResult = await Promise.all(galleryImagePromise);
+
+    if (!coverImageData.length && !galleryImageResult.length) {
+      return res.json({
+        message: "Image upload failed",
+      });
+    }
+    const galleryImages = galleryImageResult.map((result) => result?.url);
     const car = await DB.CAR.create({
       name,
       brandName,
@@ -47,7 +53,8 @@ const addCarController = async (req, res) => {
       owner,
       serviceType,
       rentPerHour,
-      // carImage: carImageURL.url,
+      carImage: coverImageData?.[0].url,
+      gallery: galleryImages,
     });
     res.status(201).json({
       message: "Car added successfully",

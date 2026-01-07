@@ -9,7 +9,21 @@ app.use(express.json());
  * /cars
  * POST
  */
-router.post("/", upload.array("gallery", 8), CONTROLLER.CAR.addCarController);
+// router.post("/", upload.array("gallery", 8), CONTROLLER.CAR.addCarController);
+// router.post("/", upload.single("gallery"), CONTROLLER.CAR.addCarController);
+router.post(
+  "/",
+  upload.fields([
+    {
+      name: "coverImage",
+      maxCount: 1,
+    },
+    {
+      name: "gallery",
+    },
+  ]),
+  CONTROLLER.CAR.addCarController
+);
 
 /**
  * /cars

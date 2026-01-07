@@ -52,6 +52,9 @@ const carSchema = new Schema({
   rentPerHour: {
     type: Number,
   },
+  gallery: {
+    type: [String],
+  },
 });
 
 const carModel = mongoose.model("cars", carSchema);
