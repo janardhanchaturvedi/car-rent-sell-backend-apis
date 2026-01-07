@@ -12,14 +12,11 @@ module.exports = auth = (isTokenRequired = true, userAllowed = []) => {
       });
     }
     const decodeInformation = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("decodeInformation", decodeInformation);
-    console.log("userAllowed", userAllowed);
 
     const userInformation = await DB.USER.findOne({
       _id: decodeInformation?.userId,
     }).populate("role");
     const isUserAllowed = userAllowed.includes(userInformation?.role?.role);
-    console.log(isUserAllowed);
     if (!isUserAllowed) {
       return res.json({
         messgae: "Unauthorised Acess",

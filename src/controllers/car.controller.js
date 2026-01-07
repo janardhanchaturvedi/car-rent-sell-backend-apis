@@ -18,12 +18,7 @@ const addCarController = async (req, res) => {
     } = req.body;
     const coverImage = req.files.coverImage;
     const galleryImage = req.files.gallery;
-    console.log(
-      "coverImage \n",
-      coverImage,
-      "galleryImage-------------------- \n ",
-      galleryImage
-    );
+
     const coverImagePromise = await coverImage.map((item) => {
       return uploadOnCloudinary(item.path);
     });

@@ -5,7 +5,6 @@ const DB = require("./../models");
 const router = express.Router();
 
 router.post("/signup", async function (req, res) {
-  console.log(req.body);
   try {
     const { name, password, email, role } = req.body;
 
@@ -37,7 +36,6 @@ router.post("/signup", async function (req, res) {
       { userId: response._id, role: role },
       process.env.JWT_SECRET
     );
-    console.log("token", token);
     return res.json({
       message: "user registered successfully",
       res: response,
@@ -52,7 +50,6 @@ router.post("/signup", async function (req, res) {
 });
 
 router.post("/signin", async function (req, res) {
-  console.log("Signin request body:", req.body);
   try {
     const { email, password } = req.body;
 
