@@ -24,8 +24,35 @@ const uploadOnCloudinary = async (localFilePath) => {
     return null;
   }
 };
+const getPublicId = (imageURL) => {
+  // Split the URL at the 'upload/' segment
+  const parts = imageURL.split("upload/");
 
-module.exports = { uploadOnCloudinary };
-//APi KEy 823949321717683
-//key secret : QS6WIFDtwOlFZZqdw4egZrds5Mk
-// key name : car-rent
+  if (parts.length < 2) {
+    return null; // Not a standard Cloudinary delivery URL
+  }
+
+  // Get the part of the URL after 'upload/' (e.g., 'v1312461204/examples/avatar.jpg' or 'examples/avatar.jpg')
+  const publicIdWithExtension = parts[1].split("/").slice(1).join("/"); // Remove the optional 'v[number]/' if present
+  // Remove the file extension
+  const extensionIndex = publicIdWithExtension.lastIndexOf(".");
+  if (extensionIndex === -1) {
+    return publicIdWithExtension; // No extension found (unlikely for images)
+  }
+  return publicIdWithExtension.substring(0, extensionIndex);
+};
+
+const deleteFromCloudinary = async (filePath) => {
+  console.log(filePath);
+  const publicId = getPublicId(filePath);
+  try {
+    if (!publicId) return;
+    const response = await cloudinary.uploader.destroy(publicId);
+    console.log(response);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = { uploadOnCloudinary, deleteFromCloudinary };

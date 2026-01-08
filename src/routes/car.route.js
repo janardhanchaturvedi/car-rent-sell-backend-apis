@@ -43,6 +43,7 @@ router.get("/:id", CONTROLLER.CAR.getCarDetails);
  */
 router.put("/:id", CONTROLLER.CAR.updateCarDetails);
 
+router.delete("/image", CONTROLLER.CAR.deletImage);
 /**
  * cars/:id
  * DELETE

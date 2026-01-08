@@ -1,5 +1,8 @@
 const DB = require("../models");
-const { uploadOnCloudinary } = require("../utils/cloudinary");
+const {
+  uploadOnCloudinary,
+  deleteFromCloudinary,
+} = require("../utils/cloudinary");
 
 const addCarController = async (req, res) => {
   try {
@@ -128,7 +131,10 @@ const getCarDetails = () => {};
 const deleteCar = async (req, res) => {
   try {
     const { id } = req.params;
-
+    // Find the Id Data
+    // Get URL for the asests
+    // Extract the public which is already handled in the delete Cloudinary
+    // check if it's delete successfully then delete
     const deleteCar = await DB.CAR.findByIdAndDelete(id);
 
     if (!deleteCar) {
@@ -148,10 +154,25 @@ const deleteCar = async (req, res) => {
   }
 };
 
+const deletImage = async (req, res, next) => {
+  const { pathName } = req.query;
+  const response = await deleteFromCloudinary(pathName);
+  if (response?.result != "ok") {
+    return res.json({
+      message: "Image Failed",
+      error: response?.result,
+    });
+  }
+  console.log(response);
+  return res.json({
+    message: "ok",
+  });
+};
 module.exports = {
   addCarController,
   getAllCars,
   getCarDetails,
   updateCarDetails,
   deleteCar,
+  deletImage,
 };
