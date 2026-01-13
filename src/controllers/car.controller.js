@@ -1,4 +1,6 @@
 const DB = require("../models");
+const apiResponse = require("../utils/apiResponse");
+const asyncHandler = require("../utils/asyncHandler");
 const {
   uploadOnCloudinary,
   deleteFromCloudinary,
@@ -54,9 +56,14 @@ const addCarController = async (req, res) => {
       carImage: coverImageData?.[0].url,
       gallery: galleryImages,
     });
-    res.status(201).json({
+    // res.status(201).json({
+    //   message: "Car added successfully",
+    //   sucess: true,
+    //   data: car,
+    // });
+    apiResponse.OK({
+      res,
       message: "Car added successfully",
-      data: car,
     });
   } catch (error) {
     res.status(400).json({
@@ -81,11 +88,26 @@ const getAllCars = async (req, res) => {
   }
 };
 
-const updateCarDetails = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const {
-      name,
+const updateCarDetails = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const {
+    name,
+    brandName,
+    carType,
+    manufacturingYear,
+    features,
+    transmission,
+    capicity,
+    sellingPrice,
+    owner,
+    serviceType,
+    rentPerHour,
+  } = req.body;
+
+  const updatecar = await DB.CAR.findByIdAndUpdate(
+    id,
+    {
+      name: name?.toUpperCase(),
       brandName,
       carType,
       manufacturingYear,
@@ -96,36 +118,14 @@ const updateCarDetails = async (req, res) => {
       owner,
       serviceType,
       rentPerHour,
-    } = req.body;
-
-    const updatecar = await DB.CAR.findByIdAndUpdate(
-      id,
-      {
-        name: name?.toUpperCase(),
-        brandName,
-        carType,
-        manufacturingYear,
-        features,
-        transmission,
-        capicity,
-        sellingPrice,
-        owner,
-        serviceType,
-        rentPerHour,
-      },
-      { new: true }
-    );
-    res.json({
-      message: "car update successfully",
-      data: updatecar,
-    });
-  } catch (error) {
-    res.json({
-      message: "error updating car",
-      error: error.message,
-    });
-  }
-};
+    },
+    { new: true }
+  );
+  res.json({
+    message: "car update successfully",
+    data: updatecar,
+  });
+});
 const getCarDetails = () => {};
 
 const deleteCar = async (req, res) => {
